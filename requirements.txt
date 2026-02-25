@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Flask==2.3.0
 numpy
 pandas
@@ -8,14 +7,3 @@ matplotlib
 seaborn
 joblib
 gunicorn
-=======
-Flask==2.3.0
-numpy
-pandas
-scikit-learn
-statsmodels
-matplotlib
-seaborn
-joblib
-gunicorn
->>>>>>> 83353df (Cleaned requirements file for deployment)
