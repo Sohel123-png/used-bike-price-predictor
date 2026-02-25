@@ -1,69 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Used Bike Price Predictor</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; }
-        form { margin-top: 20px; }
-        label { display: block; margin: 10px 0 5px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; }
-        button { background: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        button:hover { background: #0056b3; }
-        .result { margin-top: 20px; padding: 15px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; font-size: 20px; text-align: center; }
-        .error { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
-    </style>
+<meta charset="UTF-8">
+<title>AI Bike Price Predictor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1e3c72);
+background-size:400% 400%;
+animation:bg 12s ease infinite;
+}
+
+@keyframes bg{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:100%;
+max-width:750px;
+padding:40px;
+border-radius:20px;
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(18px);
+box-shadow:0 25px 50px rgba(0,0,0,0.3);
+animation:fade .8s ease;
+}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(30px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+h1{
+text-align:center;
+color:#fff;
+margin-bottom:8px;
+font-weight:600;
+}
+
+.subtitle{
+text-align:center;
+color:#ddd;
+font-size:14px;
+margin-bottom:30px;
+}
+
+.field{
+position:relative;
+margin-bottom:22px;
+}
+
+.field input,
+.field select{
+width:100%;
+padding:14px 14px;
+border-radius:12px;
+border:none;
+outline:none;
+background:rgba(255,255,255,0.15);
+color:#fff;
+font-size:14px;
+transition:.3s;
+}
+
+.field label{
+position:absolute;
+left:14px;
+top:14px;
+color:#ccc;
+font-size:13px;
+pointer-events:none;
+transition:.3s;
+}
+
+.field input:focus,
+.field select:focus{
+background:rgba(255,255,255,0.25);
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown)+label{
+top:-10px;
+font-size:11px;
+color:#fff;
+}
+
+select{
+appearance:none;
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+font-size:16px;
+font-weight:500;
+color:white;
+cursor:pointer;
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+.result{
+margin-top:25px;
+padding:18px;
+border-radius:12px;
+text-align:center;
+font-size:18px;
+font-weight:500;
+}
+
+.success{
+background:rgba(46,204,113,0.2);
+color:#7dffb1;
+border:1px solid rgba(46,204,113,0.5);
+}
+
+.error{
+background:rgba(231,76,60,0.2);
+color:#ffb3a7;
+border:1px solid rgba(231,76,60,0.5);
+}
+
+footer{
+text-align:center;
+color:#bbb;
+font-size:12px;
+margin-top:20px;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>🛵 Used Bike Price Predictor</h1>
-        <p style="text-align:center;">Enter bike details to estimate resale value</p>
 
-        <form method="POST" action="/predict">
-            <label>Kms Driven</label>
-            <input type="number" name="kms_driven" required placeholder="e.g. 25000">
+<div class="container">
 
-            <label>Bike Age (years)</label>
-            <input type="number" name="age" required placeholder="e.g. 5">
+<h1>🚀 AI Bike Price Predictor</h1>
+<p class="subtitle">Smart price estimation powered by Machine Learning</p>
 
-            <label>Engine Power (cc)</label>
-            <input type="number" name="power" required placeholder="e.g. 150">
+<form method="POST" action="/predict">
 
-            <label>Original Price (₹)</label>
-            <input type="number" name="original_price" required placeholder="e.g. 120000">
+<div class="field">
+<input type="number" name="kms_driven" placeholder=" " required>
+<label>Kilometers Driven</label>
+</div>
 
-            <label>Brand</label>
-            <select name="brand" required>
-                {% for brand in brands %}
-                <option value="{{ brand }}">{{ brand }}</option>
-                {% endfor %}
-            </select>
+<div class="field">
+<input type="number" name="age" placeholder=" " required>
+<label>Bike Age (Years)</label>
+</div>
 
-            <label>Owner Type</label>
-            <select name="owner" required>
-                {% for owner in owners %}
-                <option value="{{ owner }}">{{ owner }}</option>
-                {% endfor %}
-            </select>
+<div class="field">
+<input type="number" name="power" placeholder=" " required>
+<label>Engine Power (CC)</label>
+</div>
 
-            <label>City</label>
-            <select name="city" required>
-                {% for city in cities %}
-                <option value="{{ city }}">{{ city }}</option>
-                {% endfor %}
-            </select>
+<div class="field">
+<input type="number" name="original_price" placeholder=" " required>
+<label>Original Price (₹)</label>
+</div>
 
-            <button type="submit">Predict Price</button>
-        </form>
+<div class="field">
+<select name="brand" required>
+{% for brand in brands %}
+<option value="{{ brand }}">{{ brand }}</option>
+{% endfor %}
+</select>
+<label>Brand</label>
+</div>
 
-        {% if prediction %}
-        <div class="result {% if 'Error' in prediction %}error{% endif %}">
-            {{ prediction }}
-        </div>
-        {% endif %}
-    </div>
+<div class="field">
+<select name="owner" required>
+{% for owner in owners %}
+<option value="{{ owner }}">{{ owner }}</option>
+{% endfor %}
+</select>
+<label>Owner Type</label>
+</div>
+
+<div class="field">
+<select name="city" required>
+{% for city in cities %}
+<option value="{{ city }}">{{ city }}</option>
+{% endfor %}
+</select>
+<label>City</label>
+</div>
+
+<button type="submit">Predict Price</button>
+
+</form>
+
+{% if prediction %}
+<div class="result {% if 'Error' in prediction %}error{% else %}success{% endif %}">
+{{ prediction }}
+</div>
+{% endif %}
+
+<footer>Built with Machine Learning • Flask • Python</footer>
+
+</div>
+
 </body>
 </html>
