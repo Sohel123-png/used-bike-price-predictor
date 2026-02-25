@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Bike Price Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        form { margin-top: 20px; }
+        label { display: block; margin: 10px 0 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 20px; padding: 15px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; font-size: 20px; text-align: center; }
+        .error { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛵 Used Bike Price Predictor</h1>
+        <p style="text-align:center;">Enter bike details to estimate resale value</p>
+
+        <form method="POST" action="/predict">
+            <label>Kms Driven</label>
+            <input type="number" name="kms_driven" required placeholder="e.g. 25000">
+
+            <label>Bike Age (years)</label>
+            <input type="number" name="age" required placeholder="e.g. 5">
+
+            <label>Engine Power (cc)</label>
+            <input type="number" name="power" required placeholder="e.g. 150">
+
+            <label>Original Price (₹)</label>
+            <input type="number" name="original_price" required placeholder="e.g. 120000">
+
+            <label>Brand</label>
+            <select name="brand" required>
+                {% for brand in brands %}
+                <option value="{{ brand }}">{{ brand }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Owner Type</label>
+            <select name="owner" required>
+                {% for owner in owners %}
+                <option value="{{ owner }}">{{ owner }}</option>
+                {% endfor %}
+            </select>
+
+            <label>City</label>
+            <select name="city" required>
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Predict Price</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result {% if 'Error' in prediction %}error{% endif %}">
+            {{ prediction }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
